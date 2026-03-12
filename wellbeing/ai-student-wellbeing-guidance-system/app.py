@@ -14,8 +14,8 @@ app.secret_key = "mysecretkey123"
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'ksai81442@gmail.com'
-app.config['MAIL_PASSWORD'] = 'bagx vmax vqlv mgsh'
+app.config['MAIL_USERNAME'] = 'yourgmail@gmail.com'
+app.config['MAIL_PASSWORD'] = 'googleapppassword'
 
 mail = Mail(app)
 
@@ -155,3 +155,4 @@ def logout():
 # =========================
 if __name__ == "__main__":
     app.run(debug=True)
+
