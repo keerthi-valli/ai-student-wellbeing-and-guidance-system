@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Wellbeing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --dark-blue: #0d47a1;
+            --light-blue: #42a5f5;
+            --primary-green: #34a853;
+            --accent-teal: #26a69a;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
+            --dark-gray: #343a40;
+            --gradient-primary: linear-gradient(135deg, #1a73e8 0%, #26a69a 100%);
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: var(--light-gray);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .register-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            border: none;
+        }
+
+        .register-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo i {
+            color: #ffeb3b;
+            margin-right: 10px;
+        }
+
+        .register-header h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            opacity: 0.95;
+            margin-bottom: 0;
+        }
+
+        .register-body {
+            padding: 2.5rem 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--primary-blue);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .btn-register {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.05rem;
+            width: 100%;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 115, 232, 0.3);
+        }
+
+        .conditional-section {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-left: 4px solid var(--accent-teal);
+            display: none;
+        }
+
+        .role-option {
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .role-option:hover {
+            border-color: var(--light-blue);
+            background: #f0f7ff;
+        }
+
+        .role-option.selected {
+            border-color: var(--primary-blue);
+            background: #e3f2fd;
+        }
+
+        .role-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .student-icon {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--primary-green);
+        }
+
+        .counselor-icon {
+            background: rgba(154, 0, 255, 0.1);
+            color: #9a00ff;
+        }
+
+        .employee-icon {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .form-check-label a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .form-check-label a:hover {
+            text-decoration: underline;
+        }
+
+        .links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .register-body {
+                padding: 2rem 1.5rem;
+            }
+
+            .register-header {
+                padding: 2rem 1.5rem;
+            }
+
+            .logo {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="register-card">
+            <div class="register-header">
+                <div class="logo">
+                    <i class="fas fa-heartbeat"></i> WellStudent
+                </div>
+                <h2>Create Your Account</h2>
+
+                 <p class="mb-0" style="opacity: 0.9; font-size: 0.95rem;">Join our wellbeing community</p>
+            </div>
+
+            <div class="register-body">
+                <form method="POST" action="/register" id="registerForm">
+                    <!-- Basic Information -->
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="name" class="form-label">
+                                <i class="fas fa-user me-2"></i>Full Name
+                            </label>
+                            <input type="text" class="form-control" id="name" name="name"
+                                placeholder="Enter your full name" required>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="email" class="form-label">
+                                <i class="fas fa-envelope me-2"></i>Email Address
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                placeholder="you@example.com" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <label for="password" class="form-label">
+                                <i class="fas fa-lock me-2"></i>Password
+                            </label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password"
+                                    placeholder="Create a password" required minlength="8">
+                                <button type="button" class="toggle-password" onclick="togglePassword()">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            <div class="form-text">Minimum 8 characters</div>
+                        </div>
+
+                        <div class="col-md-6 mb-4">
+                            <label for="role" class="form-label">
+                                <i class="fas fa-user-tag me-2"></i>Select Your Role
+                            </label>
+                            <select class="form-select" id="role" name="role" required onchange="handleRoleChange()">
+                                <option value="" selected disabled>Choose your role...</option>
+                                <option value="student">Student</option>
+                                <option value="counselor">Counselor</option>
+                                <option value="company_employee">Company Employee</option>
+                                <option value="company_manager">Company Manager</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Emergency Contact Section (Critical for Module 8) -->
+                    <div class="row">
+                        <div class="col-12 mb-2">
+                            <h6 class="text-danger border-bottom pb-2"><i
+                                    class="fas fa-exclamation-circle me-2"></i>Emergency Contact (Required)</h6>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="emergency_contact_name" class="form-label">Contact Name</label>
+                            <input type="text" class="form-control" id="emergency_contact_name"
+                                name="emergency_contact_name" placeholder="Parent/Guardian Name" required>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="emergency_phone" class="form-label">Emergency Phone</label>
+                            <input type="tel" class="form-control" id="emergency_phone" name="emergency_phone"
+                                placeholder="+1234567890" required pattern="^\+?[0-9]{10,15}$">
+                            <div class="form-text">With country code if possible</div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <label for="emergency_email" class="form-label">Emergency Email</label>
+                            <input type="email" class="form-control" id="emergency_email" name="emergency_email"
+                                placeholder="guardian@example.com" required>
+                        </div>
+                    </div>
+
+                    <!-- Student Section -->
+                    <div id="studentSection" class="conditional-section">
+                        <h5 class="mb-4" style="color: var(--primary-green);">
+                            <i class="fas fa-user-graduate me-2"></i>Student Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="education_level" class="form-label">Education Level</label>
+                                <select class="form-select" id="education_level" name="education_level"
+                                    onchange="handleEducationLevelChange()">
+                                    <option value="" selected disabled>Select education level</option>
+                                    <option value="10th">10th Grade</option>
+                                    <option value="11th">11th Grade</option>
+                                    <option value="12th">12th Grade</option>
+                                    <option value="College">College</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- School Section (10th/11th/12th) -->
+                        <div id="schoolSection" class="conditional-section">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="school_name" class="form-label">School Name</label>
+                                    <input type="text" class="form-control" id="school_name" name="school_name"
+                                        placeholder="Enter school name">
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label for="board" class="form-label">Board</label>
+                                    <select class="form-select" id="board" name="board">
+                                        <option value="" selected disabled>Select board</option>
+                                        <option value="State Board">State Board</option>
+                                        <option value="CBSE">CBSE</option>
+                                        <option value="ICSE">ICSE</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- College Section -->
+                        <div id="collegeSection" class="conditional-section">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="college_name" class="form-label">College Name</label>
+                                    <input type="text" class="form-control" id="college_name" name="college_name"
+                                        placeholder="Enter college name">
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label for="degree" class="form-label">Degree</label>
+                                    <select class="form-select" id="degree" name="degree">
+                                        <option value="" selected disabled>Select degree</option>
+                                        <option value="B.Tech">B.Tech</option>
+                                        <option value="B.Sc">B.Sc</option>
+                                        <option value="B.Com">B.Com</option>
+                                        <option value="B.A">B.A</option>
+                                        <option value="BCA">BCA</option>
+                                        <option value="MCA">MCA</option>
+                                        <option value="M.Tech">M.Tech</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label for="year" class="form-label">Year</label>
+                                    <select class="form-select" id="year" name="year">
+                                        <option value="" selected disabled>Select year</option>
+                                        <option value="1st Year">1st Year</option>
+                                        <option value="2nd Year">2nd Year</option>
+                                        <option value="3rd Year">3rd Year</option>
+                                        <option value="4th Year">4th Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Counselor Section -->
+                    <div id="counselorSection" class="conditional-section">
+                        <h5 class="mb-4" style="color: #9a00ff;">
+                            <i class="fas fa-hands-helping me-2"></i>Counselor Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="counselor_id" class="form-label">Counselor ID</label>
+                                <input type="text" class="form-control" id="counselor_id" name="counselor_id"
+                                    placeholder="Enter your counselor ID">
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="specialization" class="form-label">Specialization</label>
+                                <input type="text" class="form-control" id="specialization" name="specialization"
+                                    placeholder="Your specialization">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="experience_years" class="form-label">Experience (Years)</label>
+                                <input type="number" class="form-control" id="experience_years_counselor"
+                                    name="experience_years" min="0" max="50" placeholder="Years of experience">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Employee/Manager Section -->
+                    <div id="employeeSection" class="conditional-section">
+                        <h5 class="mb-4" style="color: #ff9800;">
+                            <i class="fas fa-briefcase me-2"></i>Company Information
+                        </h5>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="company_name" class="form-label">Company Name</label>
+                                <input type="text" class="form-control" id="company_name" name="company_name"
+                                    placeholder="Enter company name">
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="designation" class="form-label">Designation</label>
+                                <input type="text" class="form-control" id="designation" name="designation"
+                                    placeholder="Your designation">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <label for="department" class="form-label">Department</label>
+                                <select class="form-select" id="department" name="department">
+                                    <option value="" selected disabled>Select department</option>
+                                    <option value="HR">HR</option>
+                                    <option value="Technical">Technical</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Operations">Operations</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <label for="experience_years_employee" class="form-label">Experience (Years)</label>
+                                <input type="number" class="form-control" id="experience_years_employee"
+                                    name="experience_years" min="0" max="50" placeholder="Years of experience">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                        <label class="form-check-label" for="terms">
+                            I agree to the <a href="/terms">Terms of Service</a> and
+                            <a href="/privacy">Privacy Policy</a>
+                        </label>
+                    </div>
+
+                    <!-- Submit -->
+                    <button type="submit" class="btn-register">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+
+                    <div class="text-center mt-4 links">
+                        <p>Already have an account? <a href="/login">Login here</a></p>
+                        <p><a href="/"><i class="fas fa-arrow-left me-1"></i>Back to Home</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const icon = document.querySelector('.toggle-password i');
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function handleRoleChange() {
+            const role = document.getElementById('role').value;
+
+            // Hide all sections
+            document.getElementById('studentSection').style.display = 'none';
+            document.getElementById('counselorSection').style.display = 'none';
+            document.getElementById('employeeSection').style.display = 'none';
+
+            // Reset student subsections
+            document.getElementById('schoolSection').style.display = 'none';
+            document.getElementById('collegeSection').style.display = 'none';
+            document.getElementById('education_level').value = '';
+
+            // Show selected section
+            if (role === 'student') {
+                document.getElementById('studentSection').style.display = 'block';
+            } else if (role === 'counselor') {
+                document.getElementById('counselorSection').style.display = 'block';
+            } else if (role === 'company_employee' || role === 'company_manager') {
+                document.getElementById('employeeSection').style.display = 'block';
+            }
+        }
+
+        function handleEducationLevelChange() {
+            const educationLevel = document.getElementById('education_level').value;
+
+            // Hide both sections first
+            document.getElementById('schoolSection').style.display = 'none';
+            document.getElementById('collegeSection').style.display = 'none';
+
+            // Show appropriate section
+            if (educationLevel === '10th' || educationLevel === '11th' || educationLevel === '12th') {
+                document.getElementById('schoolSection').style.display = 'block';
+            } else if (educationLevel === 'College') {
+                document.getElementById('collegeSection').style.display = 'block';
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            // All conditional sections start hidden
+            document.getElementById('studentSection').style.display = 'none';
+            document.getElementById('counselorSection').style.display = 'none';
+            document.getElementById('employeeSection').style.display = 'none';
+            document.getElementById('schoolSection').style.display = 'none';
+            document.getElementById('collegeSection').style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>

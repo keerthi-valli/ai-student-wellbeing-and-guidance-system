@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Wellbeing System | Your Digital Mentor</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --dark-blue: #0d47a1;
+            --light-blue: #42a5f5;
+            --primary-green: #34a853;
+            --light-green: #81c784;
+            --accent-teal: #26a69a;
+            --dark-gray: #2d3748;
+            --medium-gray: #4a5568;
+            --light-gray: #f8f9fa;
+            --white: #ffffff;
+            --gradient-primary: linear-gradient(135deg, #1a73e8 0%, #26a69a 100%);
+            --gradient-light: linear-gradient(135deg, #e3f2fd 0%, #e8f5e9 100%);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            overflow-x: hidden;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        
+        /* Navigation - FIXED VISIBILITY */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            color: var(--primary-blue) !important;
+        }
+        
+        .navbar-brand i {
+            color: var(--accent-teal);
+            margin-right: 8px;
+        }
+        
+        .nav-link {
+            color: var(--dark-gray) !important;
+            font-weight: 500;
+            margin: 0 8px;
+            padding: 8px 16px !important;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--primary-blue) !important;
+            background-color: rgba(26, 115, 232, 0.08);
+        }
+        
+        /* BUTTONS - CONSISTENT DESIGN */
+        .btn-primary-custom {
+            background: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+        }
+        
+        .btn-primary-custom:hover {
+            background: var(--dark-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 115, 232, 0.3);
+        }
+        
+        .btn-outline-custom {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            background: transparent;
+            padding: 10px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-outline-custom:hover {
+            background: var(--primary-blue);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 6rem 0 5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='20' viewBox='0 0 100 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M21.184 20c.357-.13.72-.264 1.088-.402l1.768-.661C33.64 15.347 39.647 14 50 14c10.271 0 15.362 1.222 24.629 4.928.955.383 1.869.74 2.75 1.072h6.225c-2.51-.73-5.139-1.691-8.233-2.928C65.888 13.278 60.562 12 50 12c-10.626 0-16.855 1.397-26.66 5.063l-1.767.662c-2.475.923-4.66 1.674-6.724 2.275h6.335zm0-20C13.258 2.892 8.077 4 0 4V2c5.744 0 9.951-.574 14.85-2h6.334zM77.38 0C85.239 2.966 90.502 4 100 4V2c-6.842 0-11.386-.542-16.396-2h-6.225zM0 14c8.44 0 13.718-1.21 22.272-4.402l1.768-.661C33.64 5.347 39.647 4 50 4c10.271 0 15.362 1.222 24.629 4.928C84.112 12.722 89.438 14 100 14v-2c-10.271 0-15.362-1.222-24.629-4.928C65.888 3.278 60.562 2 50 2 39.374 2 33.145 3.397 23.34 7.063l-1.767.662C13.223 10.84 8.163 12 0 12v2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            color: var(--white);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+            max-width: 600px;
+            color: rgba(255, 255, 255, 0.95);
+        }
+        
+        .hero-buttons .btn {
+            margin-right: 12px;
+            margin-bottom: 10px;
+        }
+        
+        .hero-illustration {
+            max-width: 100%;
+            height: auto;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        /* Features Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+            padding-bottom: 15px;
+            color: var(--dark-blue);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-teal);
+            border-radius: 2px;
+        }
+        
+        .feature-card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--light-blue);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            background: var(--gradient-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+        }
+        
+        .feature-card h4 {
+            color: var(--dark-blue);
+            margin-bottom: 1rem;
+        }
+        
+        /* Benefits Section */
+        .benefits-section {
+            background: var(--light-gray);
+            padding: 5rem 0;
+        }
+        
+        .benefit-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+        }
+        
+        .benefit-icon {
+            background: var(--primary-green);
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+        }
+        
+        .benefit-item h5 {
+            color: var(--dark-blue);
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Call to Action */
+        .cta-section {
+            background: var(--gradient-primary);
+            color: var(--white);
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+        }
+        
+        /* Footer */
+        .footer {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer h4, .footer h5 {
+            color: var(--white);
+        }
+        
+        .footer-links a {
+            color: #cbd5e0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--white);
+            padding-left: 5px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .navbar-nav {
+                text-align: center;
+                padding-top: 1rem;
+            }
+            
+            .nav-link {
+                margin: 4px 0;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .hero-buttons .btn {
+                width: auto;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-heartbeat"></i> WellStudent
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#benefits">Benefits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/login" class="btn btn-outline-custom">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a href="/register" class="btn btn-primary-custom">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="hero-title">AI-Driven Student Wellbeing & Guidance System</h1>
+                    <p class="hero-subtitle">
+                        A holistic platform that understands your academic challenges, emotional needs, 
+                        and provides timely guidance. Your 24/7 digital mentor for a balanced student life.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="/register" class="btn btn-primary-custom">
+                            <i class="fas fa-user-plus me-2"></i> Get Started Free
+                        </a>
+                        <a href="#features" class="btn btn-outline-custom" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
+                            <i class="fas fa-play-circle me-2"></i> Explore Features
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6 mt-5 mt-lg-0">
+                    <div class="text-center">
+                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Student Wellbeing" class="hero-illustration" style="max-width: 80%;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h2 class="section-title mb-4">Why We Created This Platform</h2>
+                    <p class="lead mb-4" style="color: var(--medium-gray);">
+                        Students today face unprecedented pressure - academic stress, emotional challenges, 
+                        and the constant need for guidance. Traditional systems focus only on grades, 
+                        ignoring the human behind the student.
+                    </p>
+                    <p class="mb-5" style="color: var(--medium-gray);">
+                        Our AI-Driven Student Wellbeing System bridges this gap by providing a safe space for 
+                        academic guidance, emotional support, and personal growth. We believe every student 
+                        deserves a mentor who understands both their academic struggles and emotional journey.
+                    </p>
+                    
+                    <div class="row mt-5">
+                        <div class="col-md-4 mb-4">
+                            <div class="h-100 p-4 border rounded-3 text-center" style="border-color: #e2e8f0 !important;">
+                                <div class="display-4 mb-3" style="color: var(--primary-blue);">24/7</div>
+                                <h5 style="color: var(--dark-blue);">Always Available</h5>
+                                <p style="color: var(--medium-gray);">Support whenever you need it, day or night</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="h-100 p-4 border rounded-3 text-center" style="border-color: #e2e8f0 !important;">
+                                <div class="display-4 mb-3" style="color: var(--primary-blue);">100%</div>
+                                <h5 style="color: var(--dark-blue);">Private & Secure</h5>
+                                <p style="color: var(--medium-gray);">Your thoughts and data are completely confidential</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-4">
+                            <div class="h-100 p-4 border rounded-3 text-center" style="border-color: #e2e8f0 !important;">
+                                <div class="display-4 mb-3" style="color: var(--primary-blue);">AI</div>
+                                <h5 style="color: var(--dark-blue);">Smart Guidance</h5>
+                                <p style="color: var(--medium-gray);">Personalized insights based on your unique needs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title">Everything You Need in One Platform</h2>
+            <p class="text-center mb-5" style="color: var(--medium-gray);">Discover features designed to support your complete student journey</p>
+            
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-brain"></i>
+                        </div>
+                        <h4>Academic Guidance</h4>
+                        <p style="color: var(--medium-gray);">Identify weak subjects, track academic difficulties, and get personalized learning recommendations to improve your performance.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h4>Digital Diary</h4>
+                        <p style="color: var(--medium-gray);">A private space to express your thoughts, reflect on your day, and release emotional stress in a completely secure environment.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h4>Wellbeing Monitoring</h4>
+                        <p style="color: var(--medium-gray);">Track your emotional patterns and receive early alerts when our system detects signs of stress or declining wellbeing.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        <h4>Emergency Support</h4>
+                        <p style="color: var(--medium-gray);">Immediate assistance during critical situations. Connect with mentors and counselors when you need urgent help.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Progress Tracking</h4>
+                        <p style="color: var(--medium-gray);">Visualize your academic and emotional progress over time with insightful charts and personalized reports.</p>
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-lg-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <h4>Mentor Connection</h4>
+                        <p style="color: var(--medium-gray);">Get guidance from experienced mentors and counselors who understand student challenges and can provide valuable advice.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="benefits-section">
+        <div class="container">
+            <h2 class="section-title">How Students Benefit</h2>
+            <p class="text-center mb-5" style="color: var(--medium-gray);">Join thousands of students who have transformed their academic journey</p>
+            
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div>
+                            <h5>Reduce Academic Stress</h5>
+                            <p style="color: var(--medium-gray);">Identify problem areas early and get targeted help before issues escalate.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div>
+                            <h5>Emotional Safety Net</h5>
+                            <p style="color: var(--medium-gray);">Having a private outlet for emotions reduces anxiety and improves mental health.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div>
+                            <h5>Better Academic Performance</h5>
+                            <p style="color: var(--medium-gray);">Students with emotional support typically show 15-25% improvement in grades.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-6">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h5>Early Problem Detection</h5>
+                            <p style="color: var(--medium-gray);">Our system identifies patterns that might indicate emerging issues before they become serious.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h5>Community Support</h5>
+                            <p style="color: var(--medium-gray);">Feel connected even when studying remotely or facing personal challenges alone.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h5>Holistic Development</h5>
+                            <p style="color: var(--medium-gray);">Grow not just academically but emotionally, building resilience for future challenges.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Transform Your Student Experience?</h2>
+            <p class="lead mb-4" style="opacity: 0.95;">
+                Join thousands of students who have found balance, support, and success through our platform.
+            </p>
+            <div class="d-flex flex-wrap justify-content-center gap-3">
+                <a href="/register" class="btn btn-primary-custom btn-lg">
+                    <i class="fas fa-rocket me-2"></i> Start Free Today
+                </a>
+                <a href="/login" class="btn btn-outline-custom btn-lg" style="background: rgba(255,255,255,0.1); border-color: white; color: white;">
+                    <i class="fas fa-sign-in-alt me-2"></i> Existing User Login
+                </a>
+            </div>
+            <p class="mt-4 small" style="opacity: 0.9;">No credit card required • Free forever for students</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h4 class="mb-3">
+                        <i class="fas fa-heartbeat me-2"></i> WellStudent
+                    </h4>
+                    <p style="color: #cbd5e0;">Your AI-powered companion for academic success and emotional wellbeing. Supporting students worldwide since 2023.</p>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <div class="footer-links">
+                        <a href="/">Home</a>
+                        <a href="#features">Features</a>
+                        <a href="#benefits">Benefits</a>
+                        <a href="#about">About</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="mb-3">Legal</h5>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Student Safety</a>
+                        <a href="#">Data Protection</a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-3 mb-4">
+                    <h5 class="mb-3">Contact</h5>
+                    <p style="color: #cbd5e0;">
+                        <i class="fas fa-envelope me-2"></i> support@wellstudent.org<br>
+                        <i class="fas fa-phone me-2"></i> +1 (555) 123-4567<br>
+                        <i class="fas fa-map-marker-alt me-2"></i> Student Support Center
+                    </p>
+                </div>
+            </div>
+            
+            <hr class="my-4" style="border-color: #4a5568;">
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-0" style="color: #cbd5e0;">&copy; 2023 WellStudent System. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-0" style="color: #cbd5e0;">Designed with <i class="fas fa-heart text-danger"></i> for students worldwide</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if(window.scrollY > 50) {
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.boxShadow = '0 2px 15px rgba(0, 0, 0, 0.08)';
+                navbar.style.background = 'white';
+            }
+        });
+        
+        // Active nav link highlighting
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        window.addEventListener('scroll', function() {
+            let current = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                const sectionHeight = section.clientHeight;
+                if(scrollY >= sectionTop && scrollY < sectionTop + sectionHeight) {
+                    current = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('href') === `#${current}` || 
+                   (current === '' && link.getAttribute('href') === '/')) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Diary | Wellbeing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --diary-blue: #2196f3;
+            --diary-green: #4caf50;
+            --diary-purple: #9c27b0;
+            --diary-orange: #ff9800;
+            --diary-red: #f44336;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--diary-blue);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo i {
+            color: var(--diary-purple);
+            margin-right: 10px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+            background: rgba(156, 39, 176, 0.1);
+            color: var(--diary-purple);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--diary-blue) 0%, var(--diary-purple) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .content-wrapper {
+            padding: 2rem 0;
+        }
+
+        .privacy-notice {
+            background: rgba(76, 175, 80, 0.1);
+            border-left: 4px solid var(--diary-green);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .input-mode-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .mode-btn {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .mode-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-btn.active {
+            border-color: var(--diary-blue);
+            background: rgba(33, 150, 243, 0.05);
+        }
+
+        .mode-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .diary-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--diary-blue);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 200px;
+            resize: vertical;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Voice Recording UI */
+        .voice-recording-ui {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .recording-indicator {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #ff5252 0%, #ff9800 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .recording-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-record {
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-start {
+            background: var(--diary-green);
+            color: white;
+        }
+
+        .btn-stop {
+            background: var(--diary-red);
+            color: white;
+        }
+
+        /* Analysis Cards */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid;
+        }
+
+        .card-mood {
+            border-color: var(--diary-purple);
+        }
+
+        .card-stress {
+            border-color: var(--diary-red);
+        }
+
+        .card-tone {
+            border-color: var(--diary-blue);
+        }
+
+        .card-pressure {
+            border-color: var(--diary-orange);
+        }
+
+        .analysis-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .mood-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .mood-happy {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--diary-green);
+        }
+
+        .mood-neutral {
+            background: rgba(33, 150, 243, 0.1);
+            color: var(--diary-blue);
+        }
+
+        .mood-sad {
+            background: rgba(156, 39, 176, 0.1);
+            color: var(--diary-purple);
+        }
+
+        .mood-anxious {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--diary-orange);
+        }
+
+        .mood-stressed {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--diary-red);
+        }
+
+        /* AI Response */
+        .ai-response {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border-left: 4px solid var(--diary-green);
+        }
+
+        .ai-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--diary-blue);
+            margin-right: 1rem;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--diary-blue) 0%, var(--diary-purple) 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 2rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(33, 150, 243, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 2rem 0;
+            }
+
+            .user-info {
+                text-align: left;
+                margin-top: 1rem;
+            }
+
+            .input-mode-selector {
+                flex-direction: column;
+            }
+
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i> Wellbeing Diary
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="user-info">
+                        <span class="user-role">{{ user.role|capitalize }}</span>
+                        <!-- Dynamic Dashboard Link -->
+                        <a href="{{ url_for(dashboard_route) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </a>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm ms-2">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            <h1>Digital Diary</h1>
+            <p class="mb-0">Your private space for thoughts and emotions</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="container">
+            <!-- Privacy Notice -->
+            <div class="privacy-notice">
+                <p class="mb-0">
+                    <i class="fas fa-lock me-2"></i>
+                    <strong>Privacy & Trust:</strong> Your diary is private and securely stored.
+                    Your data is used only to support your wellbeing.
+                </p>
+            </div>
+
+            <!-- Input Mode Selector -->
+            <div class="input-mode-selector">
+                <div class="mode-btn active" id="textModeBtn" onclick="selectMode('text')">
+                    <div class="mode-icon text-primary">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h5>Text Mode</h5>
+                    <p class="text-muted mb-0">Type your thoughts freely</p>
+                </div>
+                <div class="mode-btn" id="voiceModeBtn" onclick="selectMode('voice')">
+                    <div class="mode-icon text-danger">
+                        <i class="fas fa-microphone"></i>
+                    </div>
+                    <h5>Voice Mode</h5>
+                    <p class="text-muted mb-0">Speak your feelings naturally</p>
+                </div>
+            </div>
+
+            <!-- Diary Form -->
+            <form method="POST" action="/diary" class="diary-form">
+                <input type="hidden" id="input_type" name="input_type" value="text">
+
+                <!-- Text Input Section -->
+                <div id="textInputSection">
+                    <div class="mb-4">
+                        <label for="diary_content" class="form-label">
+                            <i class="fas fa-pen me-2"></i>Write Your Thoughts
+                        </label>
+                        <textarea class="form-control" id="diary_content" name="diary_content"
+                            placeholder="Write freely about your day, thoughts, or feelings..."></textarea>
+                        <div class="form-text">
+                            Express yourself without judgment. Emojis are welcome! 😊
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Voice Input Section -->
+                <div id="voiceInputSection" style="display: none;">
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-microphone me-2"></i>Voice Recording
+                        </label>
+                        <div class="voice-recording-ui">
+                            <div class="recording-indicator">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <p class="mb-0">Your voice tone will be analyzed to understand emotional state.</p>
+                            <p class="text-muted mt-2">Click "Start Recording" to begin</p>
+
+                            <div class="recording-controls">
+                                <button type="button" class="btn-record btn-start" onclick="startRecording()">
+                                    <i class="fas fa-play me-2"></i>Start Recording
+                                </button>
+                                <button type="button" class="btn-record btn-stop" onclick="stopRecording()" disabled>
+                                    <i class="fas fa-stop me-2"></i>Stop Recording
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Changed name to voice_data to avoid conflict -->
+                        <input type="hidden" id="voice_content" name="voice_data" value="">
+                        <div class="form-text mt-2">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Voice analysis includes tone, pitch, and pace for emotional understanding.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mood and Stress Selection -->
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <label for="mood" class="form-label">
+                            <i class="fas fa-smile me-2"></i>How are you feeling? (Optional)
+                        </label>
+                        <select class="form-select" id="mood" name="mood">
+                            <option value="" selected>Select your current mood (Auto-detect if blank)</option>
+                            <option value="Happy">Happy 😊</option>
+                            <option value="Neutral">Neutral 😐</option>
+                            <option value="Sad">Sad 😢</option>
+                            <option value="Anxious">Anxious 😰</option>
+                            <option value="Stressed">Stressed 😫</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <label for="stress_level" class="form-label">
+                            <i class="fas fa-heartbeat me-2"></i>Stress Level (Optional)
+                        </label>
+                        <select class="form-select" id="stress_level" name="stress_level">
+                            <option value="" selected>Select stress level (Auto-detect if blank)</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AI Analysis Placeholder -->
+                <div class="analysis-grid">
+                    <div class="analysis-card card-mood">
+                        <div class="analysis-icon text-purple">
+                            <i class="fas fa-smile"></i>
+                        </div>
+                        <h6>Detected Mood</h6>
+                        <div class="mood-badge mood-neutral">Neutral</div>
+                        <small class="text-muted">Based on text/voice analysis</small>
+                    </div>
+
+                    <div class="analysis-card card-stress">
+                        <div class="analysis-icon text-red">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h6>Stress Level</h6>
+                        <div class="h5 text-red">Medium</div>
+                        <small class="text-muted">AI-calculated stress score</small>
+                    </div>
+
+                    <div class="analysis-card card-tone">
+                        <div class="analysis-icon text-blue">
+                            <i class="fas fa-wave-square"></i>
+                        </div>
+                        <h6>Emotional Tone</h6>
+                        <div class="h5 text-blue">Calm</div>
+                        <small class="text-muted">Voice/text emotional analysis</small>
+                    </div>
+
+                    <div class="analysis-card card-pressure">
+                        <div class="analysis-icon text-orange">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                        <h6>Pressure Indicator</h6>
+                        <div class="h5 text-orange">62%</div>
+                        <small class="text-muted">Overall pressure score</small>
+                    </div>
+                </div>
+
+                <!-- AI Response Section -->
+                <div class="ai-response">
+                    <div class="d-flex align-items-start">
+                        <div class="ai-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-2">AI Response</h5>
+                            <p class="mb-0" id="aiResponseText">
+                                Thank you for sharing. Your feelings are valid and important.
+                                Remember to be kind to yourself today.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-submit">
+                    <i class="fas fa-save me-2"></i>Save Diary Entry
+                </button>
+            </form>
+
+            <!-- Past Entries Section -->
+            <div class="diary-history mt-5">
+                <h3 class="mb-4"><i class="fas fa-history me-2"></i>Your Diary History</h3>
+                {% if entries %}
+                <div class="row">
+                    {% for entry in entries %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span
+                                        class="badge {{ 'bg-success' if entry.emotion == 'Happy' else 'bg-warning' if entry.emotion == 'Anxious' or entry.emotion == 'Stressed' else 'bg-secondary' }}">
+                                        {{ entry.emotion }}
+                                    </span>
+                                    <small class="text-muted">{{ entry.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                                </div>
+                                <h6 class="card-subtitle mb-2 text-muted">Stress Level: {{ entry.stress_score }}</h6>
+
+                                {% if entry.input_type == 'voice' %}
+                                <div class="voice-entry">
+                                    <p class="card-text text-muted fst-italic"><i
+                                            class="fas fa-microphone me-2"></i>Voice Note Recording</p>
+                                    <div class="voice-player mt-2">
+                                        <audio controls src="{{ entry.audio_path }}" class="w-100"></audio>
+                                    </div>
+
+                                    <!-- Transcript Display Logic: Only if confidence >= 0.6 -->
+                                    {% if entry.transcript_confidence and entry.transcript_confidence >= 0.6 %}
+                                    <div class="mt-2 p-2 bg-light rounded">
+                                        <small class="text-muted d-block mb-1"><i
+                                                class="fas fa-language me-1"></i>Transcript:</small>
+                                        <p class="mb-0 small text-secondary">{{ entry.transcript_text }}</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% else %}
+                                <p class="card-text">{{ entry.text_content }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i> No diary entries yet. Start writing today!
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Input Mode Selection
+        function selectMode(mode) {
+            const textModeBtn = document.getElementById('textModeBtn');
+            const voiceModeBtn = document.getElementById('voiceModeBtn');
+            const textInputSection = document.getElementById('textInputSection');
+            const voiceInputSection = document.getElementById('voiceInputSection');
+            const inputTypeField = document.getElementById('input_type');
+
+            if (mode === 'text') {
+                textModeBtn.classList.add('active');
+                voiceModeBtn.classList.remove('active');
+                textInputSection.style.display = 'block';
+                voiceInputSection.style.display = 'none';
+                inputTypeField.value = 'text';
+            } else {
+                textModeBtn.classList.remove('active');
+                voiceModeBtn.classList.add('active');
+                textInputSection.style.display = 'none';
+                voiceInputSection.style.display = 'block';
+                inputTypeField.value = 'voice';
+            }
+        }
+
+        // Voice Recording Logic with MediaRecorder
+        let mediaRecorder;
+        let audioChunks = [];
+        let isRecording = false;
+        let recordingTimer;
+        let seconds = 0;
+        let stream;
+
+        async function startRecording() {
+            try {
+                // Request permissions
+                stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+                // Determine supported MimeType
+                const mimeTypes = [
+                    'audio/webm;codecs=opus',
+                    'audio/webm',
+                    'audio/ogg;codecs=opus',
+                    'audio/ogg',
+                    'audio/mp4' // Safari support
+                ];
+
+                let options = undefined;
+                for (const type of mimeTypes) {
+                    if (MediaRecorder.isTypeSupported(type)) {
+                        options = { mimeType: type };
+                        console.log("Using MIME type:", type);
+                        break;
+                    }
+                }
+
+                if (!options) {
+                    console.warn("No supported MIME type found in list, using default.");
+                }
+
+                mediaRecorder = new MediaRecorder(stream, options);
+                audioChunks = [];
+
+                mediaRecorder.addEventListener("dataavailable", event => {
+                    if (event.data.size > 0) {
+                        audioChunks.push(event.data);
+                        console.log(`Received audio chunk: ${event.data.size} bytes`);
+                    }
+                });
+
+                mediaRecorder.addEventListener("stop", () => {
+                    const mimeType = mediaRecorder.mimeType || 'audio/webm';
+                    console.log(`Recording stopped. MIME: ${mimeType}, Chunks: ${audioChunks.length}`);
+
+                    const audioBlob = new Blob(audioChunks, { type: mimeType });
+                    console.log(`Blob size: ${audioBlob.size} bytes`);
+
+                    const reader = new FileReader();
+                    reader.readAsDataURL(audioBlob);
+                    reader.onloadend = () => {
+                        const base64Audio = reader.result;
+                        document.getElementById('voice_content').value = base64Audio;
+                        document.querySelector('.text-muted.mt-2').textContent = "Recording saved. Ready to submit.";
+                    };
+                });
+
+                // Start recording
+                mediaRecorder.start(1000); // 1000ms chunks to ensure data availability often
+                isRecording = true;
+
+                // UI Updates
+                document.querySelector('.btn-start').disabled = true;
+                document.querySelector('.btn-stop').disabled = false;
+                document.querySelector('.recording-indicator').style.background = 'linear-gradient(135deg, #ff5252 0%, #ff9800 100%)';
+
+                // Timer
+                seconds = 0;
+                document.querySelector('.text-muted.mt-2').textContent = "Recording...";
+                recordingTimer = setInterval(() => {
+                    seconds++;
+                    document.querySelector('.text-muted.mt-2').textContent =
+                        `Recording: ${Math.floor(seconds / 60)}:${(seconds % 60).toString().padStart(2, '0')}`;
+                }, 1000);
+
+            } catch (err) {
+                console.error("Error accessing microphone:", err);
+                alert("Could not access microphone. Please ensure you have granted permission.");
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                clearInterval(recordingTimer);
+
+                // UI Updates
+                document.querySelector('.btn-start').disabled = false;
+                document.querySelector('.btn-stop').disabled = true;
+                document.querySelector('.recording-indicator').style.background = 'linear-gradient(135deg, #4caf50 0%, #8bc34a 100%)';
+
+                // Stop all tracks to release microphone
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+
+                // Simulate AI response (since we don't have a real backend AI for voice yet)
+                setTimeout(() => {
+                    document.getElementById('aiResponseText').textContent =
+                        "Voice entry recorded. Our system will analyze the tone once submitted.";
+                }, 1000);
+            }
+        }
+
+        // Form Submission
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const mood = document.getElementById('mood').value;
+            const stressLevel = document.getElementById('stress_level').value;
+            const inputType = document.getElementById('input_type').value;
+            const voiceContent = document.getElementById('voice_content').value;
+            const textContent = document.getElementById('diary_content').value.trim();
+
+            if (inputType === 'text' && !textContent) {
+                e.preventDefault();
+                alert('Please write something in your diary.');
+                return;
+            }
+
+            if (inputType === 'voice' && !voiceContent) {
+                e.preventDefault();
+                alert('Please record a voice entry before saving. Click "Start Recording".');
+                return;
+            }
+
+            // Allow form submission to backend
+            // updateAnalysisPlaceholders is visual only, backend redirects anyway
+        });
+
+        // Update analysis placeholders
+        function updateAnalysisPlaceholders(mood, stressLevel) {
+            // Visual updates only
+            const moodBadge = document.querySelector('.mood-badge');
+            if (moodBadge) {
+                moodBadge.className = `mood-badge mood-${mood.toLowerCase()}`;
+                moodBadge.textContent = mood;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            // Set default mood and stress if provided by user data
+            const userMood = "{{ user.mood if user.mood else '' }}";
+            const userStress = "{{ user.stress_level if user.stress_level else '' }}";
+
+            if (userMood) {
+                const moodSelect = document.getElementById('mood');
+                if (moodSelect) moodSelect.value = userMood;
+            }
+
+            if (userStress) {
+                const stressSelect = document.getElementById('stress_level');
+                if (stressSelect) stressSelect.value = userStress;
+            }
+
+            // Update placeholders on change
+            const moodEl = document.getElementById('mood');
+            if (moodEl) {
+                moodEl.addEventListener('change', function () {
+                    const stressEl = document.getElementById('stress_level');
+                    if (stressEl) updateAnalysisPlaceholders(this.value, stressEl.value);
+                });
+            }
+
+            const stressEl = document.getElementById('stress_level');
+            if (stressEl) {
+                stressEl.addEventListener('change', function () {
+                    const moodEl = document.getElementById('mood');
+                    if (moodEl) updateAnalysisPlaceholders(moodEl.value, this.value);
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

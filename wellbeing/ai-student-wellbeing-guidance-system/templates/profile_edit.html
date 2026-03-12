@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | WellBeing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #f5f7fa;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-label {
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header bg-white py-3">
+                        <h4 class="mb-0"><i class="fas fa-user-edit text-primary me-2"></i>Edit Profile</h4>
+                    </div>
+                    <div class="card-body p-4">
+                        <form method="POST">
+
+                            <!-- Common Fields -->
+                            <h5 class="mb-3 text-muted">Basic Info</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control" name="name" value="{{ user.name }}"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email (Cannot be changed)</label>
+                                    <input type="email" class="form-control" value="{{ user.email }}" disabled>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="text" class="form-control" name="phone"
+                                    value="{{ user.phone if user.phone else '' }}" placeholder="Enter phone number">
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Module 8: Emergency Contact -->
+                            <h5 class="mb-3 text-danger"><i class="fas fa-exclamation-circle me-2"></i>Emergency Contact
+                            </h5>
+                            <div class="row mb-3">
+                                <div class="col-md-4">
+                                    <label class="form-label">Contact Name</label>
+                                    <input type="text" class="form-control" name="emergency_contact_name"
+                                        value="{{ user.emergency_contact_name if user.emergency_contact_name else '' }}"
+                                        required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Emergency Phone</label>
+                                    <input type="tel" class="form-control" name="emergency_phone"
+                                        value="{{ user.emergency_phone if user.emergency_phone else '' }}" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label">Emergency Email</label>
+                                    <input type="email" class="form-control" name="emergency_email"
+                                        value="{{ user.emergency_email if user.emergency_email else '' }}" required>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Role Specific Fields -->
+                            {% if user.role == 'student' %}
+                            <h5 class="mb-3 text-muted">Academic Details</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Education Level / Class</label>
+                                <select class="form-select" name="education_level" id="eduLevel">
+                                    <option value="10th" {% if user.education_level=='10th' %}selected{% endif %}>10th
+                                        Grade</option>
+                                    <option value="11th" {% if user.education_level=='11th' %}selected{% endif %}>11th
+                                        Grade</option>
+                                    <option value="12th" {% if user.education_level=='12th' %}selected{% endif %}>12th
+                                        Grade</option>
+                                    <option value="Undergraduate" {% if user.education_level=='Undergraduate'
+                                        %}selected{% endif %}>Undergraduate (College)</option>
+                                    <option value="Postgraduate" {% if user.education_level=='Postgraduate' %}selected{%
+                                        endif %}>Postgraduate</option>
+                                </select>
+                            </div>
+
+                            <div id="schoolFields">
+                                <div class="mb-3">
+                                    <label class="form-label">School Name</label>
+                                    <input type="text" class="form-control" name="school_name"
+                                        value="{{ user.school_name if user.school_name else '' }}">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Board</label>
+                                    <select class="form-select" name="board">
+                                        <option value="CBSE" {% if user.board=='CBSE' %}selected{% endif %}>CBSE
+                                        </option>
+                                        <option value="ICSE" {% if user.board=='ICSE' %}selected{% endif %}>ICSE
+                                        </option>
+                                        <option value="State Board" {% if user.board=='State Board' %}selected{% endif
+                                            %}>State Board</option>
+                                        <option value="IB" {% if user.board=='IB' %}selected{% endif %}>IB</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="collegeFields" style="display:none;">
+                                <div class="mb-3">
+                                    <label class="form-label">College/University Name</label>
+                                    <input type="text" class="form-control" name="college_name"
+                                        value="{{ user.college_name if user.college_name else '' }}">
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Degree</label>
+                                        <input type="text" class="form-control" name="degree"
+                                            value="{{ user.degree if user.degree else '' }}"
+                                            placeholder="e.g. B.Tech, B.Sc">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Year of Study</label>
+                                        <select class="form-select" name="year">
+                                            <option value="1st Year" {% if user.year=='1st Year' %}selected{% endif %}>
+                                                1st Year</option>
+                                            <option value="2nd Year" {% if user.year=='2nd Year' %}selected{% endif %}>
+                                                2nd Year</option>
+                                            <option value="3rd Year" {% if user.year=='3rd Year' %}selected{% endif %}>
+                                                3rd Year</option>
+                                            <option value="4th Year" {% if user.year=='4th Year' %}selected{% endif %}>
+                                                4th Year</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {% elif user.role == 'company_employee' %}
+                            <h5 class="mb-3 text-muted">Professional Details</h5>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Company Name</label>
+                                    <input type="text" class="form-control" name="company_name"
+                                        value="{{ user.company_name if user.company_name else '' }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Department</label>
+                                    <input type="text" class="form-control" name="department"
+                                        value="{{ user.department if user.department else '' }}">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Designation</label>
+                                    <input type="text" class="form-control" name="designation"
+                                        value="{{ user.designation if user.designation else '' }}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Experience (Years)</label>
+                                    <input type="number" class="form-control" name="experience_years"
+                                        value="{{ user.experience_years if user.experience_years else '' }}">
+                                </div>
+                            </div>
+
+                            {% elif user.role == 'counselor' %}
+                            <h5 class="mb-3 text-muted">Professional Details</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Specialization</label>
+                                <input type="text" class="form-control" name="specialization"
+                                    value="{{ user.specialization if user.specialization else '' }}"
+                                    placeholder="e.g. Child Psychology, Career Counseling">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Experience (Years)</label>
+                                <input type="number" class="form-control" name="experience_years"
+                                    value="{{ user.experience_years if user.experience_years else '' }}">
+                            </div>
+                            {% endif %}
+
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <a href="javascript:history.back()" class="btn btn-outline-secondary">Cancel</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to toggle student fields
+        const eduLevel = document.getElementById('eduLevel');
+        if (eduLevel) {
+            const schoolFields = document.getElementById('schoolFields');
+            const collegeFields = document.getElementById('collegeFields');
+
+            function toggleFields() {
+                const val = eduLevel.value;
+                if (['10th', '11th', '12th'].includes(val)) {
+                    schoolFields.style.display = 'block';
+                    collegeFields.style.display = 'none';
+                } else {
+                    schoolFields.style.display = 'none';
+                    collegeFields.style.display = 'block';
+                }
+            }
+
+            eduLevel.addEventListener('change', toggleFields);
+            toggleFields(); // Init
+        }
+    </script>
+</body>
+
+</html>

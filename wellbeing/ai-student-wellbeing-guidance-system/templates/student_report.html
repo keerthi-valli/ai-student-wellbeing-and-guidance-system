@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.name }} - Emotional Report | WellCounselor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --counselor-purple: #9c27b0;
+            --risk-high: #f44336;
+            --risk-med: #ff9800;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .header-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .risk-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .summary-box {
+            background: #e3f2fd;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-blue);
+            margin-bottom: 2rem;
+        }
+
+        .keyword-tag {
+            background: #ffebee;
+            color: #c62828;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin: 2px;
+            font-size: 0.9rem;
+        }
+
+        .intervention-panel {
+            background: #fff3e0;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--risk-med);
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="/dashboard/counselor">
+                <i class="fas fa-chevron-left me-2"></i> Back to Dashboard
+            </a>
+        </div>
+    </nav>
+
+    <div class="container pb-5">
+
+        <!-- Header -->
+        <div class="header-card d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3"
+                    style="width: 60px; height: 60px; font-size: 1.5rem;">
+                    {{ student.name[0] | upper }}
+                </div>
+                <div>
+                    <h2 class="mb-0 fw-bold">{{ student.name }}</h2>
+                    <p class="text-muted mb-0">{{ student.education_level if student.education_level else 'Student' }} |
+                        {{ student.email }}</p>
+                </div>
+            </div>
+            <div class="text-end">
+                <span class="d-block text-muted small">Current Status</span>
+                {% if student.risk_level == 'High' %}
+                <h4 class="text-danger fw-bold"><i class="fas fa-exclamation-circle me-2"></i>High Risk</h4>
+                {% elif student.risk_level == 'Medium' %}
+                <h4 class="text-warning fw-bold"><i class="fas fa-exclamation-triangle me-2"></i>Medium Risk</h4>
+                {% else %}
+                <h4 class="text-success fw-bold"><i class="fas fa-check-circle me-2"></i>Stable</h4>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Left Column: Report -->
+            <div class="col-lg-8">
+
+                <!-- 1. Emotional Summary -->
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-brain me-2 text-primary"></i>AI Emotional Summary</h5>
+                    <div class="summary-box">
+                        <p class="mb-0">
+                            <strong>Insight:</strong> The student has shown signs of
+                            <span class="text-danger fw-bold">repeated anxiety</span> over the last 3 days, primarily
+                            triggered by academic pressure.
+                            Positive interactions were noted on Tuesday, but overall sentiment remains negative.
+                            <br><br>
+                            <em>(Note: Full diary entries are hidden to protect privacy.)</em>
+                        </p>
+                    </div>
+
+                    <!-- Keywords -->
+                    <h6 class="text-muted mb-2">Detected Keywords (Last 7 Days)</h6>
+                    <div>
+                        <span class="keyword-tag">Exam Stress</span>
+                        <span class="keyword-tag">Sleep Issues</span>
+                        <span class="keyword-tag">Overwhelmed</span>
+                        <span class="keyword-tag">Lonely</span>
+                    </div>
+                </div>
+
+                <!-- 2. Mood Chart -->
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-chart-line me-2 text-info"></i>Mood Trend (Last 7 Days)
+                    </h5>
+                    <div style="height: 300px;">
+                        <canvas id="moodChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- 3. Recent Entries (Privacy Protected) -->
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-book me-2 text-secondary"></i>Recent Diary Activity</h5>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Primary Mood</th>
+                                <th>Stress Level</th>
+                                <th>AI Sentiment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in recent_entries %}
+                            <tr>
+                                <td>{{ entry.created_at.strftime('%d %b, %Y') }}</td>
+                                <td><span class="badge bg-light text-dark border">{{ entry.mood }}</span></td>
+                                <td>{{ entry.stress_level }}</td>
+                                <td>
+                                    {% if entry.mood in ['Sad', 'Angry', 'Anxious', 'Depressed'] %}
+                                    <span class="text-danger">Negative</span>
+                                    {% elif entry.mood in ['Happy', 'Excited', 'Relaxed'] %}
+                                    <span class="text-success">Positive</span>
+                                    {% else %}
+                                    <span class="text-muted">Neutral</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No recent entries.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+            <!-- Right Column: Actions -->
+            <div class="col-lg-4">
+
+                <!-- 4. Intervention Panel -->
+                <div class="card p-4 intervention-panel">
+                    <h5 class="fw-bold mb-3 text-warning"><i class="fas fa-user-md me-2"></i>Counselor Intervention</h5>
+                    <form action="/counselor/intervene/{{ student._id }}" method="POST">
+                        <div class="mb-3">
+                            <label class="form-label">Action Type</label>
+                            <select class="form-select" name="action">
+                                <option value="Note">Internal Note</option>
+                                <option value="Message">Send Message to Student</option>
+                                <option value="Schedule">Schedule Session</option>
+                                <option value="Resolve">Mark as Resolved</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Notes / Message</label>
+                            <textarea class="form-control" name="note" rows="4" placeholder="Enter details here..."
+                                required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-warning w-100 fw-bold">Submit Action</button>
+                    </form>
+                </div>
+
+                <!-- 5. Academic Snapshot -->
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-graduation-cap me-2 text-dark"></i>Academic Snapshot</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Attendance
+                            <span class="badge bg-success rounded-pill">85%</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            Last Grade
+                            <span class="badge bg-primary rounded-pill">B+</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Chart.js
+        const ctx = document.getElementById('moodChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: {{ analytics.dates | tojson }},
+            datasets: [{
+                label: 'Wellbeing Score',
+                data: {{ analytics.scores | tojson }},
+            borderColor: '#1a73e8',
+            backgroundColor: 'rgba(26, 115, 232, 0.1)',
+            tension: 0.4,
+            fill: true
+                }]
+            },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, max: 100 }
+            }
+        }
+        });
+    </script>
+</body>
+
+</html>

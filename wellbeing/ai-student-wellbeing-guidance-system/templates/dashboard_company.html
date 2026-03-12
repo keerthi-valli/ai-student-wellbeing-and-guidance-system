@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Dashboard | WellStudent</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+            --light-bg: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light-bg);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 1.5rem;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .bg-primary-light {
+            background: rgba(52, 152, 219, 0.1);
+            color: var(--accent-color);
+        }
+
+        .bg-success-light {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+
+        .bg-danger-light {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="dashboard-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-building fa-2x text-primary me-3"></i>
+            <div>
+                <h4 class="mb-0">{{ company_name }}</h4>
+                <small class="text-muted">Manager Dashboard</small>
+            </div>
+        </div>
+        <div>
+            <span class="me-3">Welcome, {{ user.name }}</span>
+            <a href="/logout" class="btn btn-outline-danger btn-sm">Logout</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- Stats Row -->
+        <div class="row mb-4">
+            <!-- Total Employees -->
+            <div class="col-md-4">
+                <div class="stat-card border-start border-4 border-primary">
+                    <div class="icon-box bg-primary-light">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="mb-0">{{ total_employees }}</h3>
+                    <p class="text-muted mb-0">Total Employees</p>
+                </div>
+            </div>
+
+            <!-- Active Concerns (Risks) -->
+            <div class="col-md-4">
+                <div class="stat-card border-start border-4 border-danger">
+                    <div class="icon-box bg-danger-light">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3 class="mb-0">{{ active_concerns }}</h3>
+                    <p class="text-muted mb-0">Active Risk Alerts</p>
+                </div>
+            </div>
+
+            <!-- Average Wellness Score -->
+            <div class="col-md-4">
+                <div class="stat-card border-start border-4 border-success">
+                    <div class="icon-box bg-success-light">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <h3 class="mb-0">{{ avg_score }}%</h3>
+                    <p class="text-muted mb-0">Company Wellness Score</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Department Distribution Chart -->
+            <div class="col-md-6">
+                <div class="chart-container">
+                    <h5 class="mb-4">Department Distribution</h5>
+                    <canvas id="deptChart"></canvas>
+                </div>
+            </div>
+
+            <!-- At-Risk Employees List -->
+            <div class="col-md-6">
+                <div class="chart-container" style="height: 100%;">
+                    <h5 class="mb-4 text-danger"><i class="fas fa-user-shield me-2"></i>Attention Needed</h5>
+                    {% if risk_employees %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Dept</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for emp in risk_employees %}
+                                <tr>
+                                    <td>{{ emp.name }}</td>
+                                    <td><span class="badge bg-secondary">{{ emp.department }}</span></td>
+                                    <td>
+                                        {% if emp.score < 40 %} <span class="badge bg-danger">Critical ({{ emp.score
+                                            }})</span>
+                                            {% else %}
+                                            <span class="badge bg-warning text-dark">High Stress</span>
+                                            {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary">Contact</button>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <p class="text-muted">No high-risk employees detected.</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chart Script -->
+    <script>
+        const deptCtx = document.getElementById('deptChart').getContext('2d');
+        const deptData = {{ dept_distribution | tojson }};
+
+        new Chart(deptCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(deptData),
+                datasets: [{
+                    data: Object.values(deptData),
+                    backgroundColor: [
+                        '#3498db',
+                        '#2ecc71',
+                        '#e74c3c',
+                        '#f1c40f',
+                        '#9b59b6'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    </script>
+
+</body>
+
+</html>

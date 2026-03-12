@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Counselor Dashboard | WellBeing System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --counselor-purple: #9c27b0;
+            --risk-high: #f44336;
+            --risk-med: #ff9800;
+            --risk-low: #4caf50;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Alert Panel */
+        .alert-panel {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .risk-badge {
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            color: white;
+            display: inline-block;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .bg-high {
+            background: var(--risk-high);
+        }
+
+        .bg-med {
+            background: var(--risk-med);
+        }
+
+        .bg-low {
+            background: var(--risk-low);
+        }
+
+        /* Emergency Section */
+        .emergency-card {
+            border: 2px solid var(--risk-high);
+            background: #fff5f5;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .emergency-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: var(--risk-high);
+        }
+
+        .emergency-icon {
+            color: var(--risk-high);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Student Table */
+        .student-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid #eee;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .table tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            background: #eee;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #555;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="dashboard-header sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div class="logo"><i class="fas fa-heartbeat me-2 text-primary"></i>WellCounselor</div>
+            <div class="d-flex align-items-center">
+                <span class="me-3 fw-bold text-muted">Dr. {{ user.name }}</span>
+                <a href="/counselor/profile" class="btn btn-outline-primary btn-sm me-2">Profile</a>
+                <a href="/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container py-4">
+
+        <!-- 1. Alert Notification Panel -->
+        <div class="alert-panel">
+            <h4 class="mb-4 font-poppins fw-bold">Daily Risk Overview</h4>
+            <div class="row text-center">
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <h2 class="text-danger fw-bold">{{ high_risk_count }}</h2>
+                        <span class="risk-badge bg-high">High Risk</span>
+                        <p class="text-muted small mt-2">Requires Immediate Action</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <h2 class="text-warning fw-bold">{{ medium_risk_count }}</h2>
+                        <span class="risk-badge bg-med">Moderate Risk</span>
+                        <p class="text-muted small mt-2">Needs Monitoring</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 border rounded bg-white">
+                        <h2 class="text-success fw-bold">{{ low_risk_count }}</h2>
+                        <span class="risk-badge bg-low">Low Risk</span>
+                        <p class="text-muted small mt-2">Stable Condition</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Emergency Case Section (Only if cases exist) -->
+        {% if emergency_cases %}
+        <div class="emergency-card">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-circle emergency-icon me-3"></i>
+                    <div>
+                        <h4 class="text-danger fw-bold mb-1">CRITICAL ALERTS</h4>
+                        <p class="mb-0 text-muted">These students show severe signs of distress (Self-harm / Panic
+                            indicators)</p>
+                    </div>
+                </div>
+                <button class="btn btn-danger px-4" data-bs-toggle="modal" data-bs-target="#emergencyModal">View
+                    Cases</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 2. Assigned Students List -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="fw-bold">Assigned Students</h4>
+            <div class="input-group w-25">
+                <input type="text" class="form-control" placeholder="Search student...">
+                <button class="btn btn-outline-secondary"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+
+        <div class="student-table p-0">
+            <table class="table table-hover mb-0 align-middle">
+                <thead class="bg-light">
+                    <tr>
+                        <th class="ps-4">Student Name</th>
+                        <th>Education Level</th>
+                        <th>Risk Score</th>
+                        <th>Last Login</th>
+                        <th>Mood Trend</th>
+                        <th class="text-end pe-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in assigned_students %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-circle">
+                                    {{ student.name[0] | upper }}
+                                </div>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{{ student.name }}</h6>
+                                    <small class="text-muted">{{ student.email }}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                {{ student.education_level if student.education_level else 'N/A' }}
+                            </span>
+                        </td>
+                        <td>
+                            {% if student.risk_level == 'High' %}
+                            <span class="badge bg-danger">HIGH</span>
+                            {% elif student.risk_level == 'Medium' %}
+                            <span class="badge bg-warning text-dark">MEDIUM</span>
+                            {% else %}
+                            <span class="badge bg-success">LOW</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-muted">
+                            <i class="far fa-clock me-1"></i> Today
+                        </td>
+                        <td>
+                            <!-- Mock Sparkline -->
+                            <div style="height: 30px; width: 80px;">
+                                <canvas id="sparkline-{{ student._id }}" width="80" height="30"></canvas>
+                            </div>
+                        </td>
+                        <td class="text-end pe-4">
+                            <a href="/counselor/student/{{ student._id }}"
+                                class="btn btn-primary btn-sm px-3 rounded-pill">
+                                View Report
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fas fa-users fa-2x mb-3"></i><br>
+                            No students assigned yet.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <!-- Emergency Modal -->
+    <div class="modal fade" id="emergencyModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-ambulance me-2"></i>Emergency Cases</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {% for case in emergency_cases %}
+                    <div class="alert alert-danger d-flex align-items-center justify-content-between">
+                        <div>
+                            <strong>{{ case.name }}</strong> ({{ case.education_level }})
+                            <div class="small">Detected: Severe Depression Signs</div>
+                        </div>
+                        <a href="/counselor/student/{{ case._id }}"
+                            class="btn btn-sm btn-outline-danger bg-white">Respond</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Check for urgent risks on load
+        document.addEventListener('DOMContentLoaded', function () {
+            var highRiskCount = {{ high_risk_count }
+        };
+        if (highRiskCount > 0) {
+            // Optional: Show toast or modal
+            highRiskCount + " students require immediate attention!";
+        }
+
+        // Mock Sparklines
+        {% for student in assigned_students %}
+        var ctx = document.getElementById('sparkline-{{ student._id }}');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [1, 2, 3, 4, 5],
+                    datasets: [{
+                        data: [65, 59, 80, 81, 56], // Mock data
+                        borderColor: '{{ "#f44336" if student.risk_level == "High" else "#4caf50" }}',
+                        borderWidth: 2,
+                        pointRadius: 0,
+                        fill: false
+                    }]
+                },
+                options: { responsive: false, plugins: { legend: { display: false }, tooltip: { enabled: false } }, scales: { x: { display: false }, y: { display: false } } }
+            });
+        }
+        {% endfor %}
+        });
+    </script>
+</body>
+
+</html>

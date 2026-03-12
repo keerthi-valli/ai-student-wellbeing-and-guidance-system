@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Employee Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --employee-orange: #ff9800;
+            --corporate-blue: #2962ff;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo i {
+            color: var(--employee-orange);
+            margin-right: 10px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--employee-orange);
+        }
+
+        .dashboard-content {
+            padding: 2rem 0;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--corporate-blue) 0%, var(--employee-orange) 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-skills {
+            border-color: #4caf50;
+        }
+
+        .card-diary {
+            border-color: #2196f3;
+        }
+
+        .card-wellbeing {
+            border-color: #ff9800;
+        }
+
+        .card-emergency {
+            border-color: #f44336;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .icon-skills {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .icon-diary {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .icon-wellbeing {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .icon-emergency {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .stress-indicator {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .stress-level {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .stress-level-low {
+            background: #4caf50;
+            width: 30%;
+        }
+
+        .stress-level-medium {
+            background: #ff9800;
+            width: 60%;
+        }
+
+        .stress-level-high {
+            background: #f44336;
+            width: 90%;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress {
+            height: 10px;
+            margin: 10px 0;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+
+            .user-info {
+                text-align: left;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i> WellEmployee
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="user-info">
+                        <span class="user-role">Company Employee</span>
+                        <span class="text-muted">{{ user.name }}</span>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm ms-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-content">
+        <div class="container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>Welcome Back, {{ user.name }}!</h1>
+                        <p class="mb-0">Manage work stress and focus on professional growth.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="h4 mb-0" id="currentDate">Monday, March 10</div>
+                        <small id="currentTime">10:30 AM</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Widgets -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-building me-2"></i>Company</h6>
+                        <h3 class="text-primary">{{ user.company_name if user.company_name else 'Company' }}</h3>
+                        <small class="text-muted">Organization</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-id-badge me-2"></i>Designation</h6>
+                        <h3 class="text-primary">{{ user.designation if user.designation else 'Employee' }}</h3>
+                        <small class="text-muted">Role</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-sitemap me-2"></i>Department</h6>
+                        <h3 class="text-primary">{{ user.department if user.department else 'General' }}</h3>
+                        <small class="text-muted">Department</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-clock me-2"></i>Experience</h6>
+                        <h3 class="text-primary">{{ user.experience_years if user.experience_years else '0' }}</h3>
+                        <small class="text-muted">Years</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Modules Grid -->
+            <div class="row">
+
+
+                <!-- Work Diary -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-diary">
+                        <div class="stat-icon icon-diary">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        <h5>Work Diary</h5>
+                        <p class="text-muted">Reflect on work stress and professional growth</p>
+                        <div class="d-flex align-items-center mt-3">
+                            <i class="fas fa-pen text-primary me-2"></i>
+                            <span>Last entry: Today</span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="/diary" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus"></i> New Entry
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wellbeing Status -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-wellbeing">
+                        <div class="stat-icon icon-wellbeing">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h5>Work Wellbeing</h5>
+                        <p class="text-muted">Monitor work stress and burnout indicators</p>
+                        <div class="mt-3">
+                            <div class="stress-indicator">
+                                {% if user.stress_level == 'low' %}
+                                <div class="stress-level stress-level-low"></div>
+                                {% elif user.stress_level == 'high' %}
+                                <div class="stress-level stress-level-high"></div>
+                                {% else %}
+                                <div class="stress-level stress-level-medium"></div>
+                                {% endif %}
+                            </div>
+                            {% if user.stress_level %}
+                            <small>{{ user.stress_level|capitalize }} Stress</small>
+                            {% else %}
+                            <small>Medium Stress</small>
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <a href="/wellbeing" class="btn btn-sm btn-outline-warning">
+                                <i class="fas fa-chart-line"></i> View Trends
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Support -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-emergency">
+                        <div class="stat-icon icon-emergency">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        <h5>Workplace Support</h5>
+                        <p class="text-muted">HR and workplace mental health support</p>
+                        <div class="mt-3">
+                            <span class="badge bg-light text-dark">No active alerts</span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="/emergency" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-phone-alt"></i> Request Help
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="widget">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Your Professional Profile</h4>
+                            <a href="/profile/edit" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Full Name:</strong> {{ user.name }}</p>
+                                <p><strong>Email:</strong> {{ user.email }}</p>
+                                <p><strong>Company:</strong> {{ user.company_name if user.company_name else 'Not
+                                    specified' }}</p>
+                                <p><strong>Designation:</strong> {{ user.designation if user.designation else 'Not
+                                    specified' }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Department:</strong> {{ user.department if user.department else 'Not
+                                    specified' }}</p>
+                                <p><strong>Experience:</strong> {{ user.experience_years if user.experience_years else
+                                    '0' }} years</p>
+                                <p><strong>Current Mood:</strong> {{ analytics.current_mood }}</p>
+                                <p><strong>Stress Level:</strong> {{ analytics.stress_level }}</p>
+                            </div>
+                            <div class="col-md-4">
+                                <p><strong>Wellbeing Score:</strong> {{ analytics.wellbeing_score }}/100</p>
+                                <p><strong>Last Entry:</strong> {{ analytics.last_entry_date }}</p>
+                                <p>
+                                    <strong>7-Day Growth:</strong>
+                                    <span
+                                        class="{{ 'text-success' if analytics.mood_growth_percent > 0 else 'text-danger' }}">
+                                        {{ analytics.mood_growth_percent }}%
+                                        <i
+                                            class="fas fa-arrow-{{ 'up' if analytics.mood_growth_percent > 0 else 'down' }}"></i>
+                                    </span>
+                                </p>
+                                <div style="height: 150px; width: 100%;">
+                                    <canvas id="moodChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Update date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateElement = document.getElementById('currentDate');
+            const timeElement = document.getElementById('currentTime');
+
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+
+            // Chart.js Integration
+            const ctx = document.getElementById('moodChart').getContext('2d');
+            const moodChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: {{ analytics.history_labels | tojson }},
+            datasets: [{
+                label: 'Mood Trend',
+                data: {{ analytics.history_data | tojson }},
+            borderColor: '#ff9800',
+            backgroundColor: 'rgba(255, 152, 0, 0.1)',
+            tension: 0.4,
+            fill: true
+                    }]
+                },
+            options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return 'Score: ' + context.raw + '/100';
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: {
+                        callback: function (value) {
+                            if (value >= 80) return 'Happy';
+                            if (value >= 60) return 'Calm';
+                            if (value >= 40) return 'Neutral';
+                            if (value >= 25) return 'Anxious';
+                            return 'Stressed';
+                        }
+                    }
+                }
+            }
+        }
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-blue: #1a73e8;
+            --student-blue: #4285f4;
+            --college-teal: #26a69a;
+            --school-green: #34a853;
+            --accent-orange: #ff9800;
+            --success-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .dashboard-header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo i {
+            color: var(--student-blue);
+            margin-right: 10px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .role-school {
+            background: rgba(52, 168, 83, 0.1);
+            color: var(--school-green);
+        }
+
+        .role-college {
+            background: rgba(38, 166, 154, 0.1);
+            color: var(--college-teal);
+        }
+
+        .dashboard-content {
+            padding: 2rem 0;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--student-blue) 0%, var(--college-teal) 100%);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-academic {
+            border-color: #4caf50;
+        }
+
+        .card-diary {
+            border-color: #2196f3;
+        }
+
+        .card-wellbeing {
+            border-color: #ff9800;
+        }
+
+        .card-emergency {
+            border-color: #f44336;
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .icon-academic {
+            background: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+        }
+
+        .icon-diary {
+            background: rgba(33, 150, 243, 0.1);
+            color: #2196f3;
+        }
+
+        .icon-wellbeing {
+            background: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+        }
+
+        .icon-emergency {
+            background: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+        }
+
+        .stress-indicator {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .stress-level {
+            height: 100%;
+            border-radius: 5px;
+        }
+
+        .stress-level-low {
+            background: #4caf50;
+            width: 30%;
+        }
+
+        .stress-level-medium {
+            background: #ff9800;
+            width: 60%;
+        }
+
+        .stress-level-high {
+            background: #f44336;
+            width: 90%;
+        }
+
+        .widget {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress {
+            height: 10px;
+            margin: 10px 0;
+        }
+
+        .alert-panel {
+            background: #fff8e1;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .welcome-banner {
+                padding: 1.5rem;
+            }
+
+            .user-info {
+                text-align: left;
+                margin-top: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Dashboard Header -->
+    <header class="dashboard-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i> WellStudent
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="user-info">
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <span class="user-role role-school">Student ({{ user.education_level }})</span>
+                        {% else %}
+                        <span class="user-role role-college">Student ({{ user.degree }})</span>
+                        {% endif %}
+                        <span class="text-muted">{{ user.name }}</span>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm ms-2">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-content">
+        <div class="container">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1>Welcome Back, {{ user.name }}!</h1>
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <p class="mb-0">Focus on your {{ user.education_level }} board exams and manage study stress
+                            effectively.</p>
+                        {% else %}
+                        <p class="mb-0">Manage your {{ user.degree }} studies and prepare for your career ahead.</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="h4 mb-0" id="currentDate">Monday, March 10</div>
+                        <small id="currentTime">10:30 AM</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- School Student Widgets -->
+            {% if user.education_level in ['10th', '11th', '12th'] %}
+            <!-- School Student Specific Widgets -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-user-graduate me-2"></i>Class</h6>
+                        <h3 class="text-primary">{{ user.education_level }}</h3>
+                        <small class="text-muted">Grade</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-school me-2"></i>Board</h6>
+                        <h3 class="text-primary">{{ user.board if user.board else 'CBSE' }}</h3>
+                        <small class="text-muted">Curriculum</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-chart-line me-2"></i>Syllabus</h6>
+                        {% if user.syllabus_progress %}
+                        <h3 class="text-primary">{{ user.syllabus_progress }}%</h3>
+                        {% else %}
+                        <h3 class="text-primary">65%</h3>
+                        {% endif %}
+                        <small class="text-muted">Completed</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-clock me-2"></i>Exams In</h6>
+                        <h3 class="text-primary">3</h3>
+                        <small class="text-muted">Weeks</small>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- College Student Specific Widgets -->
+            <div class="row mb-4">
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-university me-2"></i>College</h6>
+                        <h3 class="text-primary">{{ user.college_name if user.college_name else 'University' }}</h3>
+                        <small class="text-muted">Institution</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-graduation-cap me-2"></i>Degree</h6>
+                        <h3 class="text-primary">{{ user.degree }}</h3>
+                        <small class="text-muted">Program</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-calendar-alt me-2"></i>Year</h6>
+                        <h3 class="text-primary">{{ user.year if user.year else '2nd' }}</h3>
+                        <small class="text-muted">Year of Study</small>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="widget">
+                        <h6><i class="fas fa-briefcase me-2"></i>Placement</h6>
+                        {% if user.placement_readiness %}
+                        <h3 class="text-primary">{{ user.placement_readiness }}%</h3>
+                        {% else %}
+                        <h3 class="text-primary">45%</h3>
+                        {% endif %}
+                        <small class="text-muted">Prepared</small>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Main Modules Grid -->
+            <div class="row">
+                <!-- Academic Guidance -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-academic">
+                        <div class="stat-icon icon-academic">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <h5>Academic Guidance</h5>
+                        <p class="text-muted">Board exam preparation and subject support</p>
+                        <div class="progress">
+                            {% if user.syllabus_progress %}
+                            <div class="progress-bar bg-success"
+                                style="width: {{ user.syllabus_progress if user.syllabus_progress is not none else '65' }}%">
+                            </div>
+                            {% else %}
+                            <div class="progress-bar bg-success" style="width: 65%"></div>
+                            {% endif %}
+                        </div>
+                        {% if user.syllabus_progress %}
+                        <small>{{ user.syllabus_progress }}% syllabus completed</small>
+                        {% else %}
+                        <small>65% syllabus completed</small>
+                        {% endif %}
+                        {% else %}
+                        <h5>Academic Guidance</h5>
+                        <p class="text-muted">{{ user.degree }} subjects and semester guidance</p>
+                        <div class="progress">
+                            {% if user.semester_progress %}
+                            <div class="progress-bar bg-success"
+                                style="width: {{ user.semester_progress if user.semester_progress is not none else '60' }}%">
+                            </div>
+                            <div class="progress-bar bg-success" style="width: 60%"></div>
+                            {% endif %}
+                        </div>
+                        {% if user.semester_progress %}
+                        <small>{{ user.semester_progress }}% semester completed</small>
+                        {% else %}
+                        <small>60% semester completed</small>
+                        {% endif %}
+                        {% endif %}
+                        <div class="mt-3">
+                            <div class="mt-3">
+                                <a href="{{ url_for('academic.academic_student') }}"
+                                    class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-arrow-right"></i> Open
+                                </a>
+                            </div>
+                            <i class="fas fa-arrow-right"></i> Open
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Digital Diary -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-diary">
+                        <div class="stat-icon icon-diary">
+                            <i class="fas fa-book-open"></i>
+                        </div>
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <h5>Digital Diary</h5>
+                        <p class="text-muted">Express daily thoughts about school and studies</p>
+                        {% else %}
+                        <h5>Digital Diary</h5>
+                        <p class="text-muted">Reflect on academic and career journey</p>
+                        {% endif %}
+                        <div class="d-flex align-items-center mt-3">
+                            <i class="fas fa-pen text-primary me-2"></i>
+                            <span>Last entry: Today</span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="/diary" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-plus"></i> New Entry
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wellbeing Status -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-wellbeing">
+                        <div class="stat-icon icon-wellbeing">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <h5>Wellbeing Status</h5>
+                        <p class="text-muted">Exam stress and study pressure monitoring</p>
+                        {% else %}
+                        <h5>Wellbeing Status</h5>
+                        <p class="text-muted">Academic and career stress analysis</p>
+                        {% endif %}
+                        <div class="mt-3">
+                            <div class="stress-indicator">
+                                {% if user.stress_level == 'low' %}
+                                <div class="stress-level stress-level-low"></div>
+                                {% elif user.stress_level == 'high' %}
+                                <div class="stress-level stress-level-high"></div>
+                                {% else %}
+                                <div class="stress-level stress-level-medium"></div>
+                                {% endif %}
+                            </div>
+                            {% if user.stress_level %}
+                            <small>{{ user.stress_level|capitalize }} Stress</small>
+                            {% else %}
+                            <small>Medium Stress</small>
+                            {% endif %}
+                        </div>
+                        <div class="mt-3">
+                            <a href="/wellbeing" class="btn btn-sm btn-outline-warning">
+                                <i class="fas fa-chart-line"></i> View Trends
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Support -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="stat-card card-emergency">
+                        <div class="stat-icon icon-emergency">
+                            <i class="fas fa-first-aid"></i>
+                        </div>
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <h5>Emergency Support</h5>
+                        <p class="text-muted">Contact school counselor or trusted adult</p>
+                        {% else %}
+                        <h5>Emergency Support</h5>
+                        <p class="text-muted">Campus counseling and crisis support</p>
+                        {% endif %}
+                        <div class="mt-3">
+                            <span class="badge bg-light text-dark">No active alerts</span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="/emergency" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-phone-alt"></i> Request Help
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Mood Trend Chart Section -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="widget">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h4><i class="fas fa-chart-area me-2 text-primary"></i>7-Day Mood Trends</h4>
+                                <small class="text-muted">
+                                    Growth:
+                                    <span
+                                        class="{{ 'text-success' if analytics.mood_growth_percent > 0 else 'text-danger' }}">
+                                        {{ analytics.mood_growth_percent }}%
+                                        <i
+                                            class="fas fa-arrow-{{ 'up' if analytics.mood_growth_percent > 0 else 'down' }}"></i>
+                                    </span>
+                                </small>
+                            </div>
+                            <span class="badge bg-primary">Last 7 Days</span>
+                        </div>
+                        <div style="height: 300px;">
+                            <canvas id="moodChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Profile Section -->
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="widget">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Your Profile</h4>
+                            <a href="/profile/edit" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p><strong>Full Name:</strong> {{ user.name }}</p>
+                                <p><strong>Email:</strong> {{ user.email }}</p>
+                                {% if user.education_level in ['10th', '11th', '12th'] %}
+                                <p><strong>Class:</strong> {{ user.education_level }} Grade</p>
+                                <p><strong>School:</strong> {{ user.school_name if user.school_name else 'Not specified'
+                                    }}</p>
+                                {% else %}
+                                <p><strong>Degree:</strong> {{ user.degree }}</p>
+                                <p><strong>College:</strong> {{ user.college_name if user.college_name else 'Not
+                                    specified' }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {% if user.education_level in ['10th', '11th', '12th'] %}
+                                <p><strong>Board:</strong> {{ user.board if user.board else 'CBSE' }}</p>
+                                {% if user.syllabus_progress %}
+                                <p><strong>Syllabus Progress:</strong> {{ user.syllabus_progress }}%</p>
+                                {% else %}
+                                <p><strong>Syllabus Progress:</strong> 65%</p>
+                                {% endif %}
+                                {% else %}
+                                <p><strong>Year:</strong> {{ user.year if user.year else '2nd Year' }}</p>
+                                {% if user.semester_progress %}
+                                <p><strong>Semester Progress:</strong> {{ user.semester_progress }}%</p>
+                                {% else %}
+                                <p><strong>Semester Progress:</strong> 60%</p>
+                                {% endif %}
+                                {% endif %}
+                                {% if user.stress_level %}
+                                <p><strong>Stress Level:</strong> {{ user.stress_level|capitalize }}</p>
+                                {% else %}
+                                <p><strong>Stress Level:</strong> Medium</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-4">
+                                {% if user.education_level in ['10th', '11th', '12th'] %}
+                                <p><strong>Upcoming Exams:</strong> 3 weeks</p>
+                                <p><strong>Daily Check-ins:</strong> 5/7 days</p>
+                                <p><strong>Wellbeing Score:</strong> {{ analytics.wellbeing_score }}/100</p>
+                                {% else %}
+                                {% if user.placement_readiness %}
+                                <p><strong>Placement Readiness:</strong> {{ user.placement_readiness }}%</p>
+                                {% else %}
+                                <p><strong>Placement Readiness:</strong> 45%</p>
+                                {% endif %}
+                                {% if user.internships %}
+                                <p><strong>Internships:</strong> {{ user.internships }} completed</p>
+                                {% else %}
+                                <p><strong>Internships:</strong> 1 completed</p>
+                                {% endif %}
+                                <p><strong>Wellbeing Score:</strong> {{ analytics.wellbeing_score }}/100</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Update date and time
+        function updateDateTime() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateElement = document.getElementById('currentDate');
+            const timeElement = document.getElementById('currentTime');
+
+            if (dateElement) {
+                dateElement.textContent = now.toLocaleDateString('en-US', options);
+            }
+
+            if (timeElement) {
+                timeElement.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            updateDateTime();
+            setInterval(updateDateTime, 60000);
+
+            // render Chart
+            const ctx = document.getElementById('moodChart').getContext('2d');
+            const moodData = {{ analytics.history_data | tojson
+        }};
+        const moodLabels = {{ analytics.history_labels | tojson }};
+
+        // Gradient for the chart
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(66, 133, 244, 0.5)'); // Blue
+        gradient.addColorStop(1, 'rgba(66, 133, 244, 0.0)');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: moodLabels,
+                datasets: [{
+                    label: 'Wellbeing Score',
+                    data: moodData,
+                    borderColor: '#4285f4',
+                    backgroundColor: gradient,
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#4285f4',
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    fill: true,
+                    tension: 0.4 // Smooth curves
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: '#f0f0f0'
+                        },
+                        ticks: {
+                            callback: function (value) {
+                                if (value >= 80) return 'Happy (80-100)';
+                                if (value >= 60) return 'Calm (60-79)';
+                                if (value >= 40) return 'Neutral (40-59)';
+                                if (value >= 25) return 'Anxious (25-39)';
+                                return 'Stressed (0-24)';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (context) {
+                                return 'Score: ' + context.raw + '/100';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academic Guidance | Student Portal</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ALL CSS CODE GOES HERE - NO JINJA2 SYNTAX IN CSS */
+        :root {
+            --primary-blue: #1a73e8;
+            --student-blue: #4285f4;
+            --accent-green: #4caf50;
+            --warning-orange: #ff9800;
+            --danger-red: #f44336;
+            --light-gray: #f8f9fa;
+            --medium-gray: #6c757d;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logo i {
+            color: var(--student-blue);
+            margin-right: 10px;
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-role {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-right: 10px;
+            background: rgba(66, 133, 244, 0.1);
+            color: var(--student-blue);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--student-blue) 0%, var(--accent-green) 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .content-wrapper {
+            padding: 2rem 0;
+        }
+
+        .side-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .profile-section {
+            text-align: center;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eef2f7;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--student-blue);
+            margin: 0 auto 1rem;
+            border: 3px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
+        }
+
+        .academic-form {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control,
+        .form-select {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .difficulty-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .difficulty-low {
+            background: rgba(76, 175, 80, 0.1);
+            color: var(--accent-green);
+        }
+
+        .difficulty-medium {
+            background: rgba(255, 152, 0, 0.1);
+            color: var(--warning-orange);
+        }
+
+        .difficulty-high {
+            background: rgba(244, 67, 54, 0.1);
+            color: var(--danger-red);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--student-blue) 0%, var(--accent-green) 100%);
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 133, 244, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .subject-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+            transition: transform 0.3s ease;
+        }
+
+        .subject-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .subject-math {
+            border-color: #4285f4;
+        }
+
+        .subject-science {
+            border-color: #34a853;
+        }
+
+        .subject-english {
+            border-color: #ea4335;
+        }
+
+        .subject-cs {
+            border-color: #9c27b0;
+        }
+
+        .progress {
+            height: 8px;
+            border-radius: 4px;
+        }
+
+        .progress-section {
+            margin-top: 1.5rem;
+        }
+
+        .progress-section p {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .guidance-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid;
+        }
+
+        .card-study {
+            border-color: #4285f4;
+        }
+
+        .card-exam {
+            border-color: #ff9800;
+        }
+
+        .card-stress {
+            border-color: #4caf50;
+        }
+
+        .recent-report-header {
+            margin-bottom: 1rem;
+        }
+
+        .recent-report-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--student-blue);
+        }
+
+        .alert-error {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .page-header {
+                padding: 2rem 0;
+            }
+
+            .user-info {
+                text-align: left;
+                margin-top: 1rem;
+            }
+
+            .side-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="logo">
+                        <i class="fas fa-heartbeat"></i> WellStudent
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="user-info">
+                        <span class="user-role">Student</span>
+                        <a href="{{ url_for('dashboard_student') }}" class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </a>
+                        <a href="/logout" class="btn btn-outline-danger btn-sm ms-2">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="container">
+            {% if user.education_level in ['10th', '11th', '12th'] %}
+            <h1>Academic Guidance - School</h1>
+            <p class="mb-0">Overcome subject difficulties and manage exam stress</p>
+            {% else %}
+            <h1>Academic Guidance - College</h1>
+            <p class="mb-0">Manage academic load and enhance subject understanding</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="container">
+            <div class="row">
+                <!-- Side Panel -->
+                <div class="col-lg-4">
+                    <div class="side-panel">
+                        <div class="profile-section">
+                            <div class="profile-avatar">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <h5>{{ user.name }}</h5>
+                            <p class="text-muted">
+                                {% if user.education_level in ['10th', '11th', '12th'] %}
+                                {{ user.education_level }} Student
+                                {% else %}
+                                {% if user.degree %}{{ user.degree }} Student{% else %}College Student{% endif %}
+                                {% endif %}
+                            </p>
+                            <div>
+                                <p><strong>Education Level:</strong> {{ user.education_level }}</p>
+                                {% if user.education_level == 'College' %}
+                                {% if user.degree %}
+                                <p><strong>Degree:</strong> {{ user.degree }}</p>
+                                {% endif %}
+                                {% if user.year %}
+                                <p><strong>Year:</strong> {{ user.year }}</p>
+                                {% endif %}
+                                {% endif %}
+                                {% if user.stress_level %}
+                                <p><strong>Stress Level:</strong> <span class="badge bg-warning">{{
+                                        user.stress_level|capitalize }}</span></p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Progress Section -->
+                        <div class="progress-section">
+                            <div class="mb-3">
+                                <p class="mb-1"><strong>Semester / Progress:</strong> {{ user.semester_progress }}%</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" style="width: {{ user.semester_progress }}%"
+                                        role="progressbar" aria-valuenow="{{ user.semester_progress }}"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="mb-1"><strong>Subject Understanding:</strong> {{ user.subject_understanding
+                                    }}%</p>
+                                <div class="progress">
+                                    <div class="progress-bar bg-info" style="width: {{ user.subject_understanding }}%"
+                                        role="progressbar" aria-valuenow="{{ user.subject_understanding }}"
+                                        aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> <!-- End side-panel -->
+                </div> <!-- End col-lg-4 -->
+
+                <!-- Main Content Area -->
+                <div class="col-lg-8">
+                    <!-- Report Difficulty Form -->
+                    <!-- Roadmap Generator Section -->
+                    <div class="main-content">
+                        <h4 class="mb-4"><i class="fas fa-map-signs me-2"></i>Personalized Study Roadmap</h4>
+
+                        {% if academic_profile and academic_profile.roadmap %}
+                        <div class="alert alert-success">
+                            <h5><i class="fas fa-check-circle me-2"></i>My Roadmap: {{ academic_profile.profile.subject
+                                }}</h5>
+                            <p class="mb-0">Goal: {{ academic_profile.profile.goal }} | Daily: {{
+                                academic_profile.profile.daily_hours }} hrs</p>
+                            {% if academic_profile.roadmap.adaptation_message %}
+                            <div class="mt-2 text-warning">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                {{ academic_profile.roadmap.adaptation_message }}
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="roadmap-timeline mt-4">
+                            {% for week in academic_profile.roadmap.roadmap %}
+                            <div
+                                class="card mb-3 border-left-{{ loop.cycle('primary', 'success', 'info', 'warning') }}">
+                                <div class="card-body">
+                                    <h6 class="card-title text-primary">Week {{ week.week }} ({{ week.start_date }} - {{
+                                        week.end_date }})</h6>
+                                    <ul class="list-unstyled mb-0">
+                                        {% for topic in week.topics %}
+                                        <li class="d-flex align-items-center mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input topic-check" type="checkbox"
+                                                    id="check-{{ week.week }}-{{ loop.index }}"
+                                                    data-week="{{ week.week }}" data-topic="{{ topic.topic }}" {% if
+                                                    topic.completed %}checked{% endif %}>
+                                                <label
+                                                    class="form-check-label {% if topic.completed %}text-decoration-line-through text-muted{% endif %}"
+                                                    for="check-{{ week.week }}-{{ loop.index }}"
+                                                    id="label-{{ week.week }}-{{ loop.index }}">
+                                                    {{ topic.topic }}
+                                                </label>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <button class="btn btn-outline-secondary mt-3" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#roadmapForm">
+                            <i class="fas fa-cog me-2"></i>Regenerate Roadmap
+                        </button>
+                        {% else %}
+                        <p class="text-muted">Create a dynamic study plan tailored to your exam dates and stress levels.
+                        </p>
+                        {% endif %}
+
+                        <div class="collapse {% if not academic_profile %}show{% endif %} mt-3" id="roadmapForm">
+                            <div class="academic-form">
+                                <form method="POST" action="{{ url_for('academic.academic_student') }}">
+                                    <input type="hidden" name="action" value="create_roadmap">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Subject</label>
+                                            <select class="form-select" name="roadmap_subject" id="roadmap_subject"
+                                                required>
+                                                <option value="" disabled selected>Select Subject</option>
+                                                <option value="python">Python Programming</option>
+                                                <option value="mathematics">Mathematics</option>
+                                                <option value="science">Science</option>
+                                                <option value="english">English</option>
+                                                <option value="history">History</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                            <div id="custom_subject_div" class="mt-2" style="display: none;">
+                                                <input type="text" class="form-control" name="custom_subject"
+                                                    placeholder="Enter custom subject (e.g. React JS)...">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Current Level</label>
+                                            <select class="form-select" name="level" required>
+                                                <option value="Beginner">Beginner</option>
+                                                <option value="Intermediate">Intermediate</option>
+                                                <option value="Advanced">Advanced</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Daily Study Hours</label>
+                                            <input type="number" class="form-control" name="daily_hours" min="1"
+                                                max="12" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Target Exam Date (Optional)</label>
+                                            <input type="date" class="form-control" name="exam_date">
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Goal</label>
+                                        <input type="text" class="form-control" name="goal"
+                                            placeholder="e.g., Score 90%, Complete Project" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">
+                                        <i class="fas fa-magic me-2"></i>Generate Roadmap
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Difficulty Form -->
+                    <div class="main-content mt-4">
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <h4 class="mb-4"><i class="fas fa-book me-2"></i>Report Subject Difficulty</h4>
+                        {% else %}
+                        <h4 class="mb-4"><i class="fas fa-graduation-cap me-2"></i>Report Course Difficulty</h4>
+                        {% endif %}
+
+                        <div class="academic-form">
+                            <form method="POST" action="{{ url_for('academic.academic_student') }}"
+                                id="difficulty-form">
+                                <input type="hidden" name="action" value="report_difficulty">
+                                <div id="form-error" class="alert alert-danger alert-error" style="display: none;">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="subject" class="form-label">
+                                            <i class="fas fa-book-open me-2"></i>
+                                            {% if user.education_level in ['10th', '11th', '12th'] %}
+                                            Subject
+                                            {% else %}
+                                            Course / Subject
+                                            {% endif %}
+                                        </label>
+                                        <input type="text" class="form-control" id="subject" name="subject" required
+                                            placeholder="e.g., Mathematics, Computer Science">
+                                        <div class="form-text">
+                                            {% if user.education_level in ['10th', '11th', '12th'] %}
+                                            Enter the school subject you're finding difficult
+                                            {% else %}
+                                            Enter the college course or subject causing difficulty
+                                            {% endif %}
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mb-3">
+                                        <label for="difficulty_level" class="form-label">
+                                            <i class="fas fa-chart-line me-2"></i>Difficulty Level
+                                        </label>
+                                        <select class="form-select" id="difficulty_level" name="difficulty_level"
+                                            required>
+                                            <option value="" selected disabled>Select difficulty level</option>
+                                            <option value="Low">Low</option>
+                                            <option value="Medium">Medium</option>
+                                            <option value="High">High</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="remarks" class="form-label">
+                                        <i class="fas fa-comment me-2"></i>Additional Remarks
+                                    </label>
+                                    <textarea class="form-control" id="remarks" name="remarks" rows="4"
+                                        placeholder="Describe what you're finding difficult..."></textarea>
+                                    <div class="form-text">
+                                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                                        Tell us which chapters or topics are challenging
+                                        {% else %}
+                                        Describe specific concepts or assignments causing difficulty
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-submit" id="submit-btn"
+                                    style="background: var(--medium-gray);">
+                                    <i class="fas fa-paper-plane me-2"></i>Submit Difficulty Report
+                                </button>
+                            </form>
+                        </div>
+
+                        <!-- Recent Difficulties -->
+                        <h5 class="mt-5 mb-4 recent-report-header">
+                            <i class="fas fa-history me-2"></i>Recent Difficulty Reports
+                        </h5>
+
+                        {% if reports and reports|length > 0 %}
+                        {% for r in reports %}
+                        <div class="recent-report-item">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h6 class="mb-0 fw-bold">{{ r.subject }}</h6>
+                                <span class="difficulty-badge difficulty-{{ r.difficulty_level|lower }}">
+                                    {{ r.difficulty_level }} Difficulty
+                                </span>
+                            </div>
+
+                            {% if r.remarks %}
+                            <p class="mb-2">{{ r.remarks }}</p>
+                            {% else %}
+                            <p class="text-muted mb-2"><i>No additional remarks provided</i></p>
+                            {% endif %}
+
+                            <small class="text-muted">
+                                <i class="far fa-calendar-alt me-1"></i>
+                                Reported on {{ r.created_at.strftime('%d %b %Y') }}
+                            </small>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="alert alert-light text-center py-4">
+                            <i class="fas fa-clipboard-list fa-2x text-muted mb-3"></i>
+                            <p class="mb-0 text-muted">No difficulty reports submitted yet.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Guidance Section -->
+                    <div class="main-content mt-4">
+                        <h4 class="mb-4"><i class="fas fa-lightbulb me-2"></i>Study Guidance</h4>
+
+                        <!-- School Student Guidance -->
+                        {% if user.education_level in ['10th', '11th', '12th'] %}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="guidance-card card-study">
+                                    <h5><i class="fas fa-book me-2"></i>Study Strategies</h5>
+                                    <ul class="mt-3">
+                                        <li>Create a consistent study schedule</li>
+                                        <li>Focus on understanding concepts</li>
+                                        <li>Practice previous year papers</li>
+                                        <li>Take regular short breaks</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="guidance-card card-exam">
+                                    <h5><i class="fas fa-calendar-alt me-2"></i>Exam Preparation</h5>
+                                    <ul class="mt-3">
+                                        <li>Start revision early</li>
+                                        <li>Focus on weak areas</li>
+                                        <li>Practice time management</li>
+                                        <li>Maintain proper sleep schedule</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <!-- College Student Guidance -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="guidance-card card-study">
+                                    <h5><i class="fas fa-graduation-cap me-2"></i>Academic Strategies</h5>
+                                    <ul class="mt-3">
+                                        <li>Attend all lectures regularly</li>
+                                        <li>Form study groups for difficult subjects</li>
+                                        <li>Consult professors during office hours</li>
+                                        <li>Balance theory with practical work</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <div class="guidance-card card-exam">
+                                    <h5><i class="fas fa-chart-line me-2"></i>Performance Improvement</h5>
+                                    <ul class="mt-3">
+                                        <li>Review lecture notes daily</li>
+                                        <li>Solve assignment problems thoroughly</li>
+                                        <li>Participate in class discussions</li>
+                                        <li>Seek clarification immediately</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        <div class="guidance-card card-stress">
+                            <h5><i class="fas fa-heartbeat me-2"></i>Stress Management</h5>
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Practice deep breathing exercises</li>
+                                        <li>Maintain regular sleep schedule</li>
+                                        <li>Take short walks between study sessions</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul>
+                                        <li>Use the digital diary for reflection</li>
+                                        <li>Don't hesitate to ask for help</li>
+                                        <li>Balance study with relaxation</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- End col-lg-8 -->
+            </div> <!-- End row -->
+        </div> <!-- End container -->
+    </div> <!-- End content-wrapper -->
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('difficulty-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const errorDiv = document.getElementById('form-error');
+
+            // Auto-focus on subject field
+            if (document.getElementById('subject')) document.getElementById('subject').focus();
+
+            form.addEventListener('submit', function (e) {
+                const subject = document.getElementById('subject').value.trim();
+                const difficulty = document.getElementById('difficulty_level').value;
+
+                // Hide any previous error
+                if (errorDiv) {
+                    errorDiv.style.display = 'none';
+                }
+
+                // Validation
+                if (!subject) {
+                    e.preventDefault();
+                    showError('Please enter a subject/course name');
+                    document.getElementById('subject').focus();
+                    return;
+                }
+
+                if (!difficulty) {
+                    e.preventDefault();
+                    showError('Please select a difficulty level');
+                    document.getElementById('difficulty_level').focus();
+                    return;
+                }
+
+                // Show loading state
+                if (submitBtn) {
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+                    submitBtn.disabled = true;
+
+                    // Restore button if form submission fails
+                    setTimeout(() => {
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    }, 5000);
+                }
+
+                // Let form submit normally to Flask backend
+            });
+
+            function showError(message) {
+                if (errorDiv) {
+                    errorDiv.textContent = message;
+                    errorDiv.style.display = 'block';
+
+                    // Scroll to error
+                    errorDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    alert('Error: ' + message);
+                }
+            }
+
+            // Clear error when user starts typing
+            if (document.getElementById('subject')) {
+                document.getElementById('subject').addEventListener('input', function () {
+                    if (errorDiv) errorDiv.style.display = 'none';
+                });
+            }
+
+            if (document.getElementById('difficulty_level')) {
+                document.getElementById('difficulty_level').addEventListener('change', function () {
+                    if (errorDiv) errorDiv.style.display = 'none';
+                });
+            }
+
+            // --- Roadmap "Other" Subject Toggle ---
+            const subjectSelect = document.getElementById('roadmap_subject');
+            const customSubjectDiv = document.getElementById('custom_subject_div');
+
+            if (subjectSelect && customSubjectDiv) {
+                subjectSelect.addEventListener('change', function () {
+                    if (this.value === 'other') {
+                        customSubjectDiv.style.display = 'block';
+                        customSubjectDiv.querySelector('input').setAttribute('required', 'required');
+                    } else {
+                        customSubjectDiv.style.display = 'none';
+                        customSubjectDiv.querySelector('input').removeAttribute('required');
+                    }
+                });
+            }
+
+            // --- Roadmap Progress Tracking ---
+            const checkboxes = document.querySelectorAll('.topic-check');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const topic = this.getAttribute('data-topic');
+                    const week = this.getAttribute('data-week');
+                    const isChecked = this.checked;
+                    const label = document.getElementById('label-' + week + '-' + this.id.split('-')[2]);
+
+                    // UI Optimistic Update
+                    if (isChecked) {
+                        label.classList.add('text-decoration-line-through', 'text-muted');
+                    } else {
+                        label.classList.remove('text-decoration-line-through', 'text-muted');
+                    }
+
+                    // API Call
+                    fetch('/academic/update_progress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            topic: topic,
+                            week: week,
+                            completed: isChecked
+                        })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                console.log('Progress updated:', data.progress);
+                                // Update progress bars if they exist on page
+                                updateProgressBars(data.progress);
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            });
+
+            function updateProgressBars(percent) {
+                // Update "Semester / Progress" bar
+                const progressText = document.querySelector('.progress-section p strong');
+                if (progressText && progressText.innerText.includes('Semester')) {
+                    progressText.parentElement.innerHTML = `<strong>Semester / Progress:</strong> ${percent}%`;
+                }
+
+                const progressBar = document.querySelector('.progress-section .bg-success');
+                if (progressBar) {
+                    progressBar.style.width = percent + '%';
+                    progressBar.setAttribute('aria-valuenow', percent);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
